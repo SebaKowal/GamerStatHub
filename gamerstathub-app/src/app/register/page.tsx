@@ -1,4 +1,4 @@
-import Register from "@/componentssupaauth/register";
+import Register from "@/components/supaauth/register";
 
 
 export default function Home() {
