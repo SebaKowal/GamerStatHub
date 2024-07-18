@@ -1,13 +1,16 @@
-import type { Config } from "tailwindcss"
+import { nextui } from '@nextui-org/theme';
+import type { Config } from "tailwindcss";
+import tailwindcssAnimate from 'tailwindcss-animate'; // Import the plugin
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+    "./node_modules/@nextui-org/theme/dist/components/(button|link|navbar|ripple|spinner).js",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -74,7 +77,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-} satisfies Config
+  plugins: [tailwindcssAnimate, nextui()],
+} satisfies Config;
 
-export default config
+export default config;
