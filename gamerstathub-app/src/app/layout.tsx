@@ -7,6 +7,8 @@ import { Toaster } from "sonner";
 import QueryProvider from "@/componentsquery-provider";
 import NavbarComponent from "@/components/ui/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import SiteFooter from "@/components/ui/footer";
+import { Divider } from "@nextui-org/divider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,8 +35,11 @@ export default function RootLayout({
           >
             <QueryProvider>
               <NavbarComponent />
+              <Divider orientation="horizontal" />
               {children}
             </QueryProvider>
+            <Divider orientation="horizontal" />
+            <SiteFooter/>
           </ThemeProvider>
           <Toaster />
         </body>
