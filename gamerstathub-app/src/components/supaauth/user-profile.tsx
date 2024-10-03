@@ -25,7 +25,7 @@ export default function UserProfile() {
 		startSignOut(async () => {
 			const supabase = createSupabaseBrowser();
 			await supabase.auth.signOut();
-			router.push("/signin");
+			router.push("/");
 		});
 	};
 

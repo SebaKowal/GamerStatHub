@@ -1,6 +1,5 @@
-// src/app/layout.tsx
+"use client";
 import React from "react";
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
@@ -9,10 +8,11 @@ import NavbarComponent from "@/components/ui/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import SiteFooter from "@/components/ui/footer";
 import { Divider } from "@nextui-org/divider";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+const defaultMetadata = {
   title: "GamerStatHub",
   description: "GamerStatHub-app",
 };
@@ -22,10 +22,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+  const isProfilePage = pathname === "/profile";
+  const metadata = isProfilePage
+    ? {
+        ...defaultMetadata,
+        title: "GamerStatHub",
+        description: "GamerStatHub-app",
+      }
+    : defaultMetadata;
+
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
+        <head>
+          <title>{metadata.title}</title>
+          <meta name="description" content={metadata.description} />
+        </head>
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"
@@ -38,8 +51,9 @@ export default function RootLayout({
               <Divider orientation="horizontal" />
               {children}
             </QueryProvider>
+
             <Divider orientation="horizontal" />
-            <SiteFooter/>
+            <SiteFooter />
           </ThemeProvider>
           <Toaster />
         </body>
