@@ -50,12 +50,12 @@ export default function NavbarComponent() {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link color="foreground" href="#">
-            Features
+            Menu
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="#" aria-current="page">
-            Customers
+          <Link href="./userGameProfile" aria-current="page">
+            MyGameProfile
           </Link>
         </NavbarItem>
         <NavbarItem>
