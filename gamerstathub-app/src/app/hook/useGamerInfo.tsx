@@ -14,8 +14,6 @@ export default function useGamerInfo(userId: any) {
         .select("*") // Wybieramy wszystkie kolumny
         .eq("ID_userAuth", userId)
         .single()
-      console.log("Fetched data:", data);
-      console.log("Error:", error);
       
       if (error) throw new Error(error.message); // Obsługa błędów
       return data; // Zwracamy dane

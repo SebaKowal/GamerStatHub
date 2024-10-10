@@ -1,33 +1,34 @@
-"use client";
+// Fetch PUUID using Riot ID from our Next.js API Route
+export const fetchPUUIDByRiotID = async (gamerName: string, tagLine: string) => {
+  const response = await fetch(`/api/riot?gamerName=${gamerName}&tagLine=${tagLine}`);
+  
+  console.log('Response status:', response.status); // Loguje status odpowiedzi
+  console.log('Response headers:', response.headers); // Loguje nagłówki odpowiedzi
 
-const RIOT_API_KEY = process.env.NEXT_PUBLIC_RIOT_API_KEY;
-if (!RIOT_API_KEY) {
-  console.log("problem z RIOT_API_KEY");
-}
-
-// Fetch PUUID using Riot ID
-export const fetchPUUIDByRiotID = async (
-  gamerName: string,
-  tagLine: string
-) => {
-  const response = await fetch(
-    `https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gamerName}/${tagLine}?api_key=${RIOT_API_KEY}`
-  );
   const data = await response.json();
+
   if (!response.ok) {
-    throw new Error(`Failed to fetch PUUID: ${data.status.message}`);
+    const errorData = await response.json(); // Odczytaj dane błędu
+    console.error('Error data:', errorData); // Loguj szczegóły błędu
+    throw new Error(`Failed to fetch PUUID: ${errorData.error.message || "Unknown error"}`);
   }
+  
+  console.log('Fetched PUUID:', data.puuid); // Loguje PUUID, jeśli wszystko poszło dobrze
   return data.puuid;
 };
 
-// Fetch Summoner Data using PUUID
+// Fetch Summoner Data using PUUID from our Next.js API Route
 export const fetchSummonerDataByPUUID = async (puuid: string) => {
-  const response = await fetch(
-    `https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}?api_key=${RIOT_API_KEY}`
-  );
+  const response = await fetch(`/api/summoner?puuid=${puuid}`);
   const data = await response.json();
+  
   if (!response.ok) {
-    throw new Error(`Failed to fetch Summoner Data: ${data.status.message}`);
+    throw new Error(`Failed to fetch Summoner Data: ${data.error.message || "Unknown error"}`);
   }
+  
   return data;
 };
+
+
+
+
