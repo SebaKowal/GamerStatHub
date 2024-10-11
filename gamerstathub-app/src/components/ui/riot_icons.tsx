@@ -14,9 +14,17 @@ export const useTierIcons = () => {
   useEffect(() => {
     const fetchTierIcons = async () => {
       const tiers = [
-        "Iron", "Bronze", "Silver", "Gold", "Platinium", 
-        "Emerald", "Diamond", "Master", "GrandMaster", 
-        "Challenger", "Unranked"
+        "Iron",
+        "Bronze",
+        "Silver",
+        "Gold",
+        "Platinium",
+        "Emerald",
+        "Diamond",
+        "Master",
+        "GrandMaster",
+        "Challenger",
+        "Unranked",
       ];
 
       const iconsPromises = tiers.map(async (tier) => {
@@ -43,22 +51,23 @@ export const useTierIcons = () => {
 
     fetchTierIcons();
   }, []);
-  console.log(tierIcons);
   return tierIcons;
 };
 
-export const getTierIcon = (tier: string, tierIcons: TierIconData[]): string => {
-  const tierIcon = tierIcons.find((icon) => icon.tier.toLowerCase() === tier.toLowerCase());
-  console.log(`Looking for tier: ${tier}, found icon:`, tierIcon);
-  
+export const getTierIcon = (
+  tier: string,
+  tierIcons: TierIconData[]
+): string => {
+  const tierIcon = tierIcons.find(
+    (icon) => icon.tier.toLowerCase() === tier.toLowerCase()
+  );
+
   // Sprawdź, czy ikona została znaleziona, jeśli nie, zwróć domyślny URL dla Unranked
   if (tierIcon) {
     return tierIcon.url;
   } else if (tier.toLowerCase() === "unranked") {
     return "https://yymvpswjxnabayeagyza.supabase.co/storage/v1/object/public/TierIcons/Iconsv4/Unranked.png"; // Zastąp odpowiednim URL dla ikony Unranked
   }
-  
+
   return ""; // Zwraca pusty string, jeśli nie znaleziono ikony
 };
-
-

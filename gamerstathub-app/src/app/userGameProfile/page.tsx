@@ -9,6 +9,7 @@ import {
   fetchSummonerRankDataByPUUID,
 } from "@/lib/riot/riotApiService";
 import { getTierIcon, useTierIcons } from "@/components/ui/riot_icons";
+import Image from "next/image";
 
 // Typy danych summoner'a
 interface SummonerData {
@@ -82,9 +83,9 @@ export default function UserGameProfile() {
           {/* Sekcja danych o summonerze */}
           <div className="flex flex-col items-center w-full md:w-1/3 pt-8">
             <div className="pb-8">
-              <div className="flex items-center bg-gray-800 rounded-lg p-4 m-2">
-                <img
-                  className="w-14 h-14 mr-3 rounded-sm"
+              <div className="flex items-center bg-gray-800 rounded-lg pt-2 p-4 m-2">
+                <Image
+                  className="w-14 h-14 mr-3 rounded-sm mt-2"
                   src={`https://ddragon.leagueoflegends.com/cdn/12.18.1/img/profileicon/${summonerData.profileIconId}.png`}
                   alt={`${gamerInfo.GameNick}'s Icon`}
                 />
@@ -114,7 +115,7 @@ export default function UserGameProfile() {
                         className="flex items-center border-b border-gray-700 pb-2 last:border-b-0"
                       >
                         {/* Ikona po lewej stronie */}
-                        <img
+                        <Image
                           className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2 mr-4"
                           src={getTierIcon(rankData.tier, tierIcons)}
                           alt={`${rankData.tier} icon`}
@@ -145,7 +146,7 @@ export default function UserGameProfile() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center">
-                  <img
+                  <Image
                     className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2"
                     src={getTierIcon("Unranked", tierIcons)}
                     alt={`Unranked icon`}
@@ -173,7 +174,7 @@ export default function UserGameProfile() {
                         key={index}
                         className="flex items-center border-b border-gray-700 pb-2 last:border-b-0"
                       >
-                        <img
+                        <Image
                           className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2 mr-4"
                           src={getTierIcon(rankData.tier, tierIcons)} // Używamy funkcji do pobrania URL ikony
                           alt={`${rankData.tier} icon`}
@@ -203,7 +204,7 @@ export default function UserGameProfile() {
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center">
-                  <img
+                  <Image
                     className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2"
                     src={getTierIcon("Unranked", tierIcons)}
                     alt={`Unranked icon`}
@@ -227,7 +228,7 @@ export default function UserGameProfile() {
       ) : (
         // Wyświetlanie komunikatu, gdy summonerData nie istnieje
         <div className="flex items-center justify-center min-h-screen">
-          <p className="text-white text-2xl">Player Doesn't Exist</p>
+          <p className="text-white text-2xl">Player Doesn t Exist</p>
         </div>
       )}
     </div>
