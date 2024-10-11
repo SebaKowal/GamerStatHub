@@ -24,7 +24,7 @@ export const fetchPUUIDByRiotID = async (
   return data.puuid;
 };
 
-// Fetch Summoner Data using PUUID from our Next.js API Route
+// Fetch Summoner Data using PUUID from our Next.js API Route 
 export const fetchSummonerDataByPUUID = async (puuid: string) => {
   const response = await fetch(`/api/riot/summoner?puuid=${puuid}`);
   const data = await response.json();
@@ -34,6 +34,22 @@ export const fetchSummonerDataByPUUID = async (puuid: string) => {
     console.error("Error data:", errorData);
     throw new Error(
       `Failed to fetch PUUID: ${errorData.error.message || "Unknown error"}`
+    );
+  }
+
+  return data;
+};
+
+
+export const fetchSummonerRankDataByPUUID = async (summonerid: string) => {
+  const response = await fetch(`/api/riot/rank?summonerid=${summonerid}`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    const errorData = await response.clone().json(); // Use `clone` to copy the response
+    console.error("Error data:", errorData);
+    throw new Error(
+      `Failed to fetch summonerid: ${errorData.error.message || "Unknown error"}`
     );
   }
 

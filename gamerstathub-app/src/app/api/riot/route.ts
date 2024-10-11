@@ -8,10 +8,12 @@ export async function GET(request: Request) {
   const tagLine = searchParams.get('tagLine');
 
   if (!RIOT_API_KEY) {
+    console.log("RIOT_API_KEY not found");
     return NextResponse.json({ error: "RIOT_API_KEY not found" }, { status: 500 });
   }
 
   if (!gamerName || !tagLine) {
+    console.log("Missing query parameters");
     return NextResponse.json({ error: "Missing query parameters" }, { status: 400 });
   }
 
