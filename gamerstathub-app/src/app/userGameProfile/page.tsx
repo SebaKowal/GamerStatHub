@@ -10,10 +10,11 @@ import {
 } from "@/lib/riot/riotApiService";
 import { getTierIcon, useTierIcons } from "@/components/ui/riot_icons";
 import Image from "next/image";
+import GameHistory from "@/components/ui/gameHistory";
 
-// Typy danych summoner'a
 interface SummonerData {
   id: string;
+  puuid: string;
   name: string;
   profileIconId: number;
   summonerLevel: number;
@@ -54,13 +55,9 @@ export default function UserGameProfile() {
             gamerInfo.GameTag
           );
           const summonerData = await fetchSummonerDataByPUUID(puuid);
-          console.log("summonerData:");
-          console.log(summonerData);
           const summonerRankData = await fetchSummonerRankDataByPUUID(
             summonerData.id
           );
-          console.log("summonerRankData:");
-          console.log(summonerRankData);
 
           setSummonerRankData(summonerRankData);
           setSummonerData(summonerData);
@@ -88,6 +85,8 @@ export default function UserGameProfile() {
                   className="w-14 h-14 mr-3 rounded-sm mt-2"
                   src={`https://ddragon.leagueoflegends.com/cdn/12.18.1/img/profileicon/${summonerData.profileIconId}.png`}
                   alt={`${gamerInfo.GameNick}'s Icon`}
+                  width={56} // Specify the width
+                  height={56}
                 />
                 <div className="text-white">
                   <p className="text-lg font-bold">{gamerInfo.GameNick}</p>
@@ -119,6 +118,8 @@ export default function UserGameProfile() {
                           className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2 mr-4"
                           src={getTierIcon(rankData.tier, tierIcons)}
                           alt={`${rankData.tier} icon`}
+                          width={56} // Specify the width
+                          height={56}
                         />
                         {/* Dane po prawej stronie */}
                         <div className="text-white">
@@ -150,6 +151,8 @@ export default function UserGameProfile() {
                     className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2"
                     src={getTierIcon("Unranked", tierIcons)}
                     alt={`Unranked icon`}
+                    width={56} // Specify the width
+                    height={56}
                   />
                   <p className="text-sm text-gray-300 font-bold mt-2">
                     Unranked
@@ -178,6 +181,8 @@ export default function UserGameProfile() {
                           className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2 mr-4"
                           src={getTierIcon(rankData.tier, tierIcons)} // Używamy funkcji do pobrania URL ikony
                           alt={`${rankData.tier} icon`}
+                          layout="fill" // Make the image fill the container
+                          objectFit="cover"
                         />
                         <div className="text-white">
                           <p className="text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
@@ -208,6 +213,8 @@ export default function UserGameProfile() {
                     className="w-24 h-24 object-cover rounded-full bg-gray-900 pt-2"
                     src={getTierIcon("Unranked", tierIcons)}
                     alt={`Unranked icon`}
+                    width={56} // Specify the width
+                    height={56}
                   />
                   <p className="text-sm text-gray-300 font-bold mt-2">
                     Unranked
@@ -219,16 +226,13 @@ export default function UserGameProfile() {
 
           {/* Blok na historię gier po prawej stronie */}
           <div className="flex flex-col w-full md:w-2/3 pt-8 px-8">
-            <h2 className="text-white text-lg font-bold mb-4">Historia Gier</h2>
-
-            {/* Miejsce na przyszłą implementację historii gier */}
-            <p className="text-white">Tu będzie historia gier...</p>
+            <GameHistory puuid={summonerData.puuid} />
           </div>
         </div>
       ) : (
         // Wyświetlanie komunikatu, gdy summonerData nie istnieje
         <div className="flex items-center justify-center min-h-screen">
-          <p className="text-white text-2xl">Player Doesn t Exist</p>
+          <p className="text-white text-2xl">Loading ... </p>
         </div>
       )}
     </div>
