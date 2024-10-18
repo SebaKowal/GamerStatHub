@@ -38,16 +38,20 @@ export default function NavbarComponent() {
   return (
     <Navbar shouldHideOnScroll>
       {!isLoggedIn ? (
-        <NavbarBrand>
+        <NavbarBrand className="">
           <p className="font-bold text-inherit">GSH</p>
         </NavbarBrand>
       ) : (
-        <NavbarBrand>
+        <NavbarBrand className="hidden sm:flex">
           <UserProfile />
         </NavbarBrand>
       )}
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      {/* Navigation links */}
+      <NavbarContent
+        className={!isLoggedIn ? "hidden sm:flex gap-4" : "gap-4"}
+        justify="center"
+      >
         <NavbarItem>
           <Link color="foreground" href="./menu">
             Menu
@@ -64,10 +68,11 @@ export default function NavbarComponent() {
           </Link>
         </NavbarItem>
       </NavbarContent>
+
       <NavbarContent justify="end">
         {!isLoggedIn ? (
           <>
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem className="">
               <Link href="/login">Login</Link>
             </NavbarItem>
             <NavbarItem>
@@ -78,7 +83,7 @@ export default function NavbarComponent() {
           </>
         ) : (
           <>
-            <NavbarItem className="hidden lg:flex">
+            <NavbarItem className="">
               <Button onClick={handleSignOut}>Logout</Button>
             </NavbarItem>
           </>
