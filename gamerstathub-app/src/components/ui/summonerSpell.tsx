@@ -12,17 +12,17 @@ export default function SummonerSpells({
   spellData,
 }: SummonerSpellsProps) {
   return (
-    <div className="flex mt-2">
+    <div className="flex flex-col gap-0.5">
       {spellIds.map((spellId) => {
         const spell = spellData[spellId];
         return (
-          <div key={spellId} className="mr-2">
+          <div key={spellId} className="">
             {spell && (
-              <Image
+              <Image className="rounded-sm"
                 src={`https://ddragon.leagueoflegends.com/cdn/14.20.1/img/spell/${spell.image.full}`}
                 alt={spell.name}
-                width={40}
-                height={40}
+                width={26}
+                height={26}
               />
             )}
           </div>

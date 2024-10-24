@@ -20,9 +20,14 @@ export default function NavbarComponent() {
   useEffect(() => {
     const checkSession = async () => {
       const supabase = createSupabaseBrowser();
-      const { data: sessionData } = await supabase.auth.getSession();
+      const { data: sessionData, error } = await supabase.auth.getSession();
 
-      setIsLoggedIn(!!sessionData.session);
+      if (error) {
+        console.error("Error fetching session data:", error);
+        return; // Early return on error
+      }
+
+      setIsLoggedIn(!!sessionData?.session); // Use optional chaining
     };
 
     checkSession();
@@ -37,15 +42,9 @@ export default function NavbarComponent() {
 
   return (
     <Navbar shouldHideOnScroll>
-      {!isLoggedIn ? (
-        <NavbarBrand className="">
-          <p className="font-bold text-inherit">GSH</p>
-        </NavbarBrand>
-      ) : (
-        <NavbarBrand className="hidden sm:flex">
-          <UserProfile />
-        </NavbarBrand>
-      )}
+      <NavbarBrand className="hidden sm:flex">
+        <p className="font-bold text-inherit">{isLoggedIn ? <UserProfile /> : 'GSH'}</p>
+      </NavbarBrand>
 
       {/* Navigation links */}
       <NavbarContent

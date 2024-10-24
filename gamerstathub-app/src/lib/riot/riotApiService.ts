@@ -1,4 +1,31 @@
-// Fetch PUUID using Riot ID from our Next.js API Route
+// riotApiService.ts
+export interface SpellData {
+  key: string;
+  name: string;
+  image: {
+    full: string;
+  };
+}
+export interface RuneData {
+  key: string;
+  name: string;
+  icon: string;
+  tree?: string;
+}
+
+export interface ItemData {
+  id: string;
+  key: string;
+  name: string;
+  image: {
+    full: string;
+  };
+}
+
+type SpellDataRecord = Record<string, SpellData>;
+type RuneDataRecord = Record<string, RuneData>;
+type ItemDataRecord = Record<string, ItemData>;
+
 export const fetchPUUIDByRiotID = async (
   gamerName: string,
   tagLine: string
@@ -77,23 +104,12 @@ export const fetchMatchHistoryByPUUID = async (puuid: string, count = 5) => {
   return data;
 };
 
-// riotApiService.ts
-export interface SpellData {
-  key: string;
-  name: string;
-  image: {
-    full: string;
-  };
-}
-
-type SpellDataRecord = Record<string, SpellData>;
-
 export async function fetchSummonerSpells(): Promise<SpellDataRecord> {
   const response = await fetch(
     "https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/summoner.json"
   );
   const data = await response.json();
-  
+
   const spells: SpellDataRecord = {};
   for (const key in data.data) {
     spells[data.data[key].key] = {
@@ -105,19 +121,55 @@ export async function fetchSummonerSpells(): Promise<SpellDataRecord> {
   return spells;
 }
 
-
-export async function fetchItems() {
-  const response = await fetch(
-    "https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/item.json"
-  );
-  const data = await response.json();
-  return data.data;
-}
-
-export async function fetchRunes() {
+export async function fetchRunes(): Promise<RuneDataRecord> {
   const response = await fetch(
     "https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/runesReforged.json"
   );
   const data = await response.json();
-  return data;
+  const runes: RuneDataRecord = {};
+
+  data.forEach((runeCategory: any) => {
+    runeCategory.slots.forEach((slot: any) => {
+      slot.runes.forEach((rune: any) => {
+        runes[rune.id] = {
+          key: rune.key,
+          name: rune.name,
+          icon: rune.icon, // Correctly storing the icon path as given in the data
+        };
+      });
+    });
+  });
+  return runes;
+}
+
+export async function fetchItems(): Promise<ItemDataRecord> {
+  const response = await fetch(
+    "https://ddragon.leagueoflegends.com/cdn/14.20.1/data/en_US/item.json"
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error fetching items: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const items: ItemDataRecord = {};
+
+  for (const key in data.data) {
+    const item = data.data[key];
+
+    if (item && item.image && item.image.full) {
+      items[key] = {
+        key: key,
+        id: key,
+        name: item.name,
+        image: {
+          full: item.image.full,
+        },
+      };
+    } else {
+      console.warn(`Item with key ${key} is missing key or image.`, item);
+    }
+  }
+
+  return items;
 }
