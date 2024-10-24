@@ -14,34 +14,7 @@ import SummonerSpells from "./summonerSpell";
 import Items from "./items";
 import Runes from "./runes";
 import Image from "next/image";
-
-interface MatchData {
-  matchId: string;
-  gameMode: string;
-  champion: string;
-  kills: number;
-  deaths: number;
-  assists: number;
-  kda: number;
-  win: boolean;
-  gameDuration: number;
-  gameDate: string;
-  summonerSpells: string[];
-  items: string[];
-  runes: string[];
-  teammates: TeammateData[];
-  opponents: OpponentData[];
-}
-
-interface TeammateData {
-  summonerName: string;
-  champion: string;
-}
-
-interface OpponentData {
-  summonerName: string;
-  champion: string;
-}
+import { MatchData } from "../interfaces";
 
 export default function GameHistory({ puuid }: { puuid: string }) {
   const [matchHistory, setMatchHistory] = useState<MatchData[]>([]);
@@ -131,7 +104,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
     const fetchItem = async () => {
       try {
         const data = await fetchItems();
-        console.log(data);
+        //console.log(data);
         setItemData(data);
       } catch (err) {
         console.error("Error fetching items", err);

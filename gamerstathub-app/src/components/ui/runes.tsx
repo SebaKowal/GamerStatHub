@@ -1,10 +1,5 @@
 import Image from "next/image";
-import { RuneData } from "@/lib/riot/riotApiService";
-
-interface RunesProps {
-  runeIds: string[];
-  runeData: Record<string, RuneData>;
-}
+import { RunesProps } from "../interfaces";
 
 export default function Runes({ runeIds, runeData }: RunesProps) {
   const baseUrl = "https://ddragon.leagueoflegends.com/cdn/img/";
@@ -14,7 +9,7 @@ export default function Runes({ runeIds, runeData }: RunesProps) {
     <div className="flex flex-col">
       <div className="grid grid-cols-2 gap-0.5">
         {selectedRunesIds.map((runeId) => {
-          const rune = runeData[runeId]; 
+          const rune = runeData[runeId];
           const iconUrl = rune ? `${baseUrl}${rune.icon}` : null;
 
           return (

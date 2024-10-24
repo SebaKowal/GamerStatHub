@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { createSupabaseBrowser } from "@/lib/supabase/client";
+import { TierIconData } from "../interfaces";
 
-// Typ danych ikon
-export interface TierIconData {
-  tier: string;
-  url: string;
-}
-
-// Hook do pobierania ścieżek ikon z Supabase Storage
 export const useTierIcons = () => {
   const [tierIcons, setTierIcons] = useState<TierIconData[]>([]);
   const supabase = createSupabaseBrowser();
@@ -62,12 +56,11 @@ export const getTierIcon = (
     (icon) => icon.tier.toLowerCase() === tier.toLowerCase()
   );
 
-  // Sprawdź, czy ikona została znaleziona, jeśli nie, zwróć domyślny URL dla Unranked
   if (tierIcon) {
     return tierIcon.url;
   } else if (tier.toLowerCase() === "unranked") {
-    return "https://yymvpswjxnabayeagyza.supabase.co/storage/v1/object/public/TierIcons/Iconsv4/Unranked.png"; // Zastąp odpowiednim URL dla ikony Unranked
+    return "https://yymvpswjxnabayeagyza.supabase.co/storage/v1/object/public/TierIcons/Iconsv4/Unranked.png";
   }
 
-  return ""; // Zwraca pusty string, jeśli nie znaleziono ikony
+  return "";
 };

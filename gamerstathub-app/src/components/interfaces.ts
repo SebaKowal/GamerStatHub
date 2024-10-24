@@ -1,26 +1,94 @@
-interface SummonerData {
+export interface SpellData {
+  key: string;
+  name: string;
+  image: {
+    full: string;
+  };
+}
+export interface RuneData {
+  key: string;
+  name: string;
+  icon: string;
+  tree?: string;
+}
+
+export interface ItemData {
   id: string;
+  key: string;
+  name: string;
+  image: {
+    full: string;
+  };
+}
+
+export interface SummonerData {
+  tag: string;
+  id: string;
+  puuid: string;
   name: string;
   profileIconId: number;
   summonerLevel: number;
 }
 
-interface RankedStats {
+export interface RankedInfoProps {
+  rankData: any[];
   queueType: string;
-  tier: string;
-  rank: string;
-  leaguePoints: number;
-  wins: number;
-  losses: number;
+  title: string;
+  tierIcons: any;
 }
 
-interface MatchHistory {
-  championName: string;
+export interface SummonerProfileProps {
+  summonerData: {
+    id: string;
+    puuid: string;
+    profileIconId: number;
+    summonerLevel: number;
+  };
+  gamerInfo: {
+    GameNick: string;
+    GameTag: string;
+  };
+}
+
+export interface SummonerSpellsProps {
+  spellIds: string[];
+  spellData: Record<string, SpellData>;
+}
+
+export interface RunesProps {
+  runeIds: string[];
+  runeData: Record<string, RuneData>;
+}
+
+export interface TierIconData {
+  tier: string;
+  url: string;
+}
+
+export interface MatchData {
+  matchId: string;
+  gameMode: string;
+  champion: string;
   kills: number;
   deaths: number;
   assists: number;
+  kda: number;
   win: boolean;
   gameDuration: number;
-  gameCreation: number;
-  cs: number;
+  gameDate: string;
+  summonerSpells: string[];
+  items: string[];
+  runes: string[];
+  teammates: TeammateData[];
+  opponents: OpponentData[];
+}
+
+export interface TeammateData {
+  summonerName: string;
+  champion: string;
+}
+
+export interface OpponentData {
+  summonerName: string;
+  champion: string;
 }

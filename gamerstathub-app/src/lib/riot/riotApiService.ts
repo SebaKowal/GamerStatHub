@@ -1,26 +1,5 @@
-// riotApiService.ts
-export interface SpellData {
-  key: string;
-  name: string;
-  image: {
-    full: string;
-  };
-}
-export interface RuneData {
-  key: string;
-  name: string;
-  icon: string;
-  tree?: string;
-}
-
-export interface ItemData {
-  id: string;
-  key: string;
-  name: string;
-  image: {
-    full: string;
-  };
-}
+import { ItemData, RuneData, SpellData } from "@/components/interfaces";
+import { env } from "process";
 
 type SpellDataRecord = Record<string, SpellData>;
 type RuneDataRecord = Record<string, RuneData>;
@@ -34,20 +13,20 @@ export const fetchPUUIDByRiotID = async (
     `/api/riot?gamerName=${gamerName}&tagLine=${tagLine}`
   );
 
-  console.log("Response status:", response.status); // Loguje status odpowiedzi
-  console.log("Response headers:", response.headers); // Loguje nagłówki odpowiedzi
+  //console.log("Response status:", response.status);
+  //console.log("Response headers:", response.headers);
 
   const data = await response.json();
 
   if (!response.ok) {
-    const errorData = await response.clone().json(); // Use `clone` to copy the response
+    const errorData = await response.clone().json();
     console.error("Error data:", errorData);
     throw new Error(
       `Failed to fetch PUUID: ${errorData.error.message || "Unknown error"}`
     );
   }
 
-  console.log("Fetched PUUID:", data.puuid); // Loguje PUUID, jeśli wszystko poszło dobrze
+  //console.log("Fetched PUUID:", data.puuid);
   return data.puuid;
 };
 
@@ -173,3 +152,4 @@ export async function fetchItems(): Promise<ItemDataRecord> {
 
   return items;
 }
+export type { SpellData, RuneData, ItemData };

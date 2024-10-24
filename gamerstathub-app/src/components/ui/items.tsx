@@ -2,24 +2,21 @@ import Image from "next/image";
 import { ItemData } from "@/lib/riot/riotApiService";
 
 interface ItemsProps {
-  itemIds?: string[]; // Allows undefined itemIds
+  itemIds?: string[];
   itemData: Record<string, ItemData>;
 }
 
 export default function Items({ itemIds = [], itemData }: ItemsProps) {
-  // Log received data for debugging
-  console.log("Received itemIds:", itemIds);
-  console.log("Received itemData:", itemData);
-
+  const baseUrl = "https://ddragon.leagueoflegends.com/cdn/14.20.1/img/item/";
   const maxItems = 6;
   const filledItemIds = [...itemIds];
 
-  // Fill with null for empty slots if there are fewer than 6 items
   while (filledItemIds.length < maxItems) {
     filledItemIds.push();
   }
 
-  const baseUrl = "https://ddragon.leagueoflegends.com/cdn/14.20.1/img/item/";
+  //console.log("Received itemIds:", itemIds);
+  //console.log("Received itemData:", itemData);
 
   return (
     <div className="grid grid-rows-2 grid-cols-3 gap-1 ">

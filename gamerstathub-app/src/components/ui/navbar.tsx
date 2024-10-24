@@ -52,17 +52,17 @@ export default function NavbarComponent() {
         justify="center"
       >
         <NavbarItem>
-          <Link color="foreground" href="./menu">
+          <Link color="foreground" href="../">
             Menu
           </Link>
         </NavbarItem>
         <NavbarItem isActive>
-          <Link href="./userGameProfile" aria-current="page">
+          <Link href="../userGameProfile" aria-current="page">
             MyGameProfile
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="./profile">
+          <Link color="foreground" href="../profile">
             Profile
           </Link>
         </NavbarItem>

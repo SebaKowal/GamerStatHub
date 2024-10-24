@@ -1,11 +1,5 @@
-// SummonerSpells.tsx
 import Image from "next/image";
-import { SpellData } from "@/lib/riot/riotApiService"; // Upewnij się, że ścieżka jest poprawna
-
-interface SummonerSpellsProps {
-  spellIds: string[];
-  spellData: Record<string, SpellData>;
-}
+import { SummonerSpellsProps } from "../interfaces";
 
 export default function SummonerSpells({
   spellIds,
@@ -18,7 +12,8 @@ export default function SummonerSpells({
         return (
           <div key={spellId} className="">
             {spell && (
-              <Image className="rounded-sm"
+              <Image
+                className="rounded-sm"
                 src={`https://ddragon.leagueoflegends.com/cdn/14.20.1/img/spell/${spell.image.full}`}
                 alt={spell.name}
                 width={26}
