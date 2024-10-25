@@ -11,6 +11,8 @@ import SummonerProfile from "@/components/ui/summonerProfile";
 import GameHistory from "@/components/ui/gameHistory";
 import { SummonerData } from "@/components/interfaces";
 
+
+
 export default function UserGameProfile() {
   const { data } = useUser();
   const { data: gamerInfo, isLoading, error } = useGamerInfo(data?.id);

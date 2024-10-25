@@ -21,11 +21,12 @@ export default function GameHistory({ puuid }: { puuid: string }) {
   const [spellData, setSpellData] = useState<Record<string, SpellData>>({});
   const [runeData, setRuneData] = useState<Record<string, RuneData>>({});
   const [itemData, setItemData] = useState<Record<string, ItemData>>({});
+  const [count, setCount] = useState<number>(5); // Start with 5 matches
 
   useEffect(() => {
     const fetchMatchHistory = async () => {
       try {
-        const matches = await fetchMatchHistoryByPUUID(puuid, 5);
+        const matches = await fetchMatchHistoryByPUUID(puuid, count);
         const detailedMatches = matches.map((match: any) => {
           const participant = match.info.participants.find(
             (p: any) => p.puuid === puuid
@@ -50,7 +51,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
             participant.item3,
             participant.item4,
             participant.item5,
-            participant.item6, // Jeśli item6 to trinket, nadal może być potrzebny
+            participant.item6,
           ];
 
           return {
@@ -86,7 +87,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
     const fetchSpells = async () => {
       try {
         const data = await fetchSummonerSpells();
-        setSpellData(data); // Set the fetched spell data to state
+        setSpellData(data);
       } catch (err) {
         console.error("Error fetching summoner spells:", err);
       }
@@ -104,7 +105,6 @@ export default function GameHistory({ puuid }: { puuid: string }) {
     const fetchItem = async () => {
       try {
         const data = await fetchItems();
-        //console.log(data);
         setItemData(data);
       } catch (err) {
         console.error("Error fetching items", err);
@@ -115,7 +115,11 @@ export default function GameHistory({ puuid }: { puuid: string }) {
     fetchSpells();
     fetchRune();
     fetchItem();
-  }, [puuid]);
+  }, [puuid, count]);
+
+  const loadMoreMatches = () => {
+    setCount((prevCount) => prevCount + 5); // Load 5 more matches each time
+  };
 
   return (
     <div className="mt-2 flex flex-col mx-auto">
@@ -171,7 +175,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
                 </div>
               </div>
 
-              <div className="flex flex-row items-center ml-4 md:ml-16">
+              <div className="flex flex-row items-center ml-4 md:ml-16 text-xs">
                 <div className="flex flex-col">
                   {match.teammates.map((teammate, idx) => (
                     <div key={idx} className="flex items-center">
@@ -212,6 +216,12 @@ export default function GameHistory({ puuid }: { puuid: string }) {
       ) : (
         <p className="text-white">Brak wyników.</p>
       )}
+      <button 
+        onClick={loadMoreMatches}
+        className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Pokaż więcej gier
+      </button>
     </div>
   );
 }

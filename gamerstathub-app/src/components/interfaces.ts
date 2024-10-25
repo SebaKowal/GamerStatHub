@@ -92,3 +92,19 @@ export interface OpponentData {
   summonerName: string;
   champion: string;
 }
+
+export interface SummonerIconProps {
+  profileIconId: number;
+  gameNick: string;
+  gameTag: string;
+  summonerLevel: number;
+}
+
+export interface User {
+  GamerInfo_ID: number;
+  GameNick: string;
+  GameTag: string;
+  PageUsername: string;
+  Description: string;
+  summonerData?: any; // Możesz zdefiniować bardziej szczegółowy typ, jeśli masz interfejs dla summonerData
+}

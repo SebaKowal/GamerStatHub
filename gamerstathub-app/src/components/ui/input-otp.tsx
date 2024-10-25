@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { OTPInput, OTPInputContext } from "input-otp"
+import { OTPInput, OTPInputContext, REGEXP_ONLY_DIGITS } from "input-otp"
 import { Dot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -17,9 +17,12 @@ const InputOTP = React.forwardRef<
       containerClassName
     )}
     className={cn("disabled:cursor-not-allowed", className)}
+    pattern={REGEXP_ONLY_DIGITS} // Tylko cyfry
     {...props}
+    maxLength={6} // Ustaw tutaj, aby było tylko raz
   />
 ))
+
 InputOTP.displayName = "InputOTP"
 
 const InputOTPGroup = React.forwardRef<

@@ -23,7 +23,7 @@ export default function Runes({ runeIds, runeData }: RunesProps) {
                   className="rounded"
                 />
               ) : (
-                <div className="w-10 h-10 bg-gray-600 rounded animate-pulse" />
+                <div className="w-6 h-6 bg-gray-600 rounded" />
               )}
             </div>
           );

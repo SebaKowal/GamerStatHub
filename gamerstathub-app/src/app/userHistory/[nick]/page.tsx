@@ -53,8 +53,8 @@ export default function UserGameProfile() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-4 px-4 sm:px-16">
       {summonerData ? (
-        <div className="flex flex-col w-full lg:flex-row">
-          <SummonerProfile
+        <div className="flex flex-col w-full lg:flex-row pt-2 p-4 m-2 ">
+          <SummonerProfile 
             summonerData={summonerData}
             gamerInfo={{ GameNick: gameNick, GameTag: gameTag }}
           />
