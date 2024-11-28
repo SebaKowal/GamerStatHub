@@ -23,7 +23,7 @@ export default function RankedInfo({ rankData, queueType, title, tierIcons }: Ra
                 height={56}
               />
               <div className="text-white">
-                <p className="text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
+                <p className="text-lg font-bold  overflow-hidden text-ellipsis">
                   {rankData.tier} {rankData.rank}
                 </p>
                 <p className="text-sm whitespace-nowrap overflow-hidden text-ellipsis">

@@ -18,13 +18,13 @@ export default function SiteFooter() {
           .
         </p>
         <nav className="flex space-x-4">
-          <a href="/about" className="hover:underline">
+          <a href="../" className="hover:underline">
             About
           </a>
-          <a href="/contact" className="hover:underline">
+          <a href="../" className="hover:underline">
             Contact
           </a>
-          <a href="/privacy" className="hover:underline">
+          <a href="../" className="hover:underline">
             Privacy Policy
           </a>
         </nav>

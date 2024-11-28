@@ -17,9 +17,9 @@ const Avatar = () => {
 		>
 			{!imageUrl ? (
 				<div className=" border w-10 h-10    grid place-content-center rounded-full hover:scale-105 transition-all">
-					<p className="text-4xl -translate-y-1">
+					<span className="text-4xl -translate-y-1">
 						{data?.email?.[0]}
-					</p>
+					</span>
 				</div>
 			) : (
 				<Image

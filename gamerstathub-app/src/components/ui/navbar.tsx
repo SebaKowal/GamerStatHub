@@ -14,7 +14,7 @@ import { createSupabaseBrowser } from "@/lib/supabase/client";
 import UserProfile from "@/components/supaauth/user-profile";
 
 export default function NavbarComponent() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,10 +24,10 @@ export default function NavbarComponent() {
 
       if (error) {
         console.error("Error fetching session data:", error);
-        return; // Early return on error
+        return;
       }
 
-      setIsLoggedIn(!!sessionData?.session); // Use optional chaining
+      setIsLoggedIn(!!sessionData?.session);
     };
 
     checkSession();
@@ -40,13 +40,20 @@ export default function NavbarComponent() {
     router.push("/login");
   };
 
+  if (isLoggedIn === null) {
+    return null;
+  }
+
+  const nextPath = isLoggedIn ? "/userGameProfile" : "/";
+
   return (
     <Navbar shouldHideOnScroll>
       <NavbarBrand className="hidden sm:flex">
-        <p className="font-bold text-inherit">{isLoggedIn ? <UserProfile /> : 'GSH'}</p>
+        <span className="font-bold text-inherit">
+          {isLoggedIn ? <UserProfile /> : "GSH"}
+        </span>
       </NavbarBrand>
 
-      {/* Navigation links */}
       <NavbarContent
         className={!isLoggedIn ? "hidden sm:flex gap-4" : "gap-4"}
         justify="center"
@@ -71,21 +78,19 @@ export default function NavbarComponent() {
       <NavbarContent justify="end">
         {!isLoggedIn ? (
           <>
-            <NavbarItem className="">
+            <NavbarItem>
               <Link href="/login">Login</Link>
             </NavbarItem>
             <NavbarItem>
               <Button>
-                <Link href="/register">Register</Link>
+                <Link href={`/register?next=${nextPath}`}>Register</Link>{" "}
               </Button>
             </NavbarItem>
           </>
         ) : (
-          <>
-            <NavbarItem className="">
-              <Button onClick={handleSignOut}>Logout</Button>
-            </NavbarItem>
-          </>
+          <NavbarItem>
+            <Button onClick={handleSignOut}>Logout</Button>
+          </NavbarItem>
         )}
       </NavbarContent>
     </Navbar>

@@ -101,10 +101,30 @@ export interface SummonerIconProps {
 }
 
 export interface User {
+  status: string;
+  isFriend: boolean;
+  ID_userAuth(ID_userAuth: any): void;
+  User_ID: string;
   GamerInfo_ID: number;
   GameNick: string;
   GameTag: string;
   PageUsername: string;
   Description: string;
   summonerData?: any; // Możesz zdefiniować bardziej szczegółowy typ, jeśli masz interfejs dla summonerData
+}
+
+export interface FriendshipStatus {
+  Rejected: any;
+  Pending: boolean;
+  Accepted: boolean | null;
+  Pending_1To2: boolean | null;
+  Pending_2To1: boolean | null;
+  Rejected_1To2?: boolean | null;
+  Rejected_2To1?: boolean | null;
+  Rejected_Both?: boolean | null;
+}
+
+export interface Friendship {
+  ID_FriendshipStatus: number;
+  FriendshipStatus: FriendshipStatus;
 }

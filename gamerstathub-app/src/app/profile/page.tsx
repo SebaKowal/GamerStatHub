@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import useUser from "@/app/hook/useUser";
 import useGamerInfo from "@/app/hook/useGamerInfo";
 import useUpdateGamerInfo from "@/app/hook/useUpdateGamerInfo";
-import { Divider } from "@nextui-org/divider";
 
 const ProfilePage = () => {
   const { data: user, isLoading: userLoading, error: userError } = useUser();
@@ -12,7 +11,7 @@ const ProfilePage = () => {
     data: gamerInfo,
     isLoading: gamerLoading,
     error: gamerError,
-    refetch,
+    refetch: refetchGamerInfo,
   } = useGamerInfo(user?.id);
   const { upsertGamerInfo } = useUpdateGamerInfo();
 
@@ -32,13 +31,6 @@ const ProfilePage = () => {
         GameTag: gamerInfo.GameTag || "Fill in your information",
         Description: gamerInfo.Description || "Fill in your information",
       });
-    } else {
-      setEditedData({
-        PageUsername: "Fill in your information",
-        GameNick: "Fill in your information",
-        GameTag: "Fill in your information",
-        Description: "Fill in your information",
-      });
     }
   }, [gamerInfo]);
 
@@ -46,7 +38,7 @@ const ProfilePage = () => {
     try {
       await upsertGamerInfo(user?.id, editedData);
       setIsEditing(false);
-      refetch(); // Refetch gamer info after updating or inserting
+      refetchGamerInfo();
     } catch (error) {
       console.error("Error updating gamer info:", error);
     }
@@ -65,46 +57,15 @@ const ProfilePage = () => {
     <div className="flex min-h-screen flex-col p-24 lg:px-80 xl:px-96">
       {user ? (
         <>
-          {gamerInfo || gamerError ? (
+          <div className="space-y-6">
             <div>
               <div className="space-y-4">
-                {/* PageUsername */}
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold w-28">Username</span>
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editedData.PageUsername}
-                      onChange={(e) =>
-                        setEditedData({
-                          ...editedData,
-                          PageUsername: e.target.value,
-                        })
-                      }
-                      className="border p-1"
-                    />
-                  ) : (
-                    <span>{editedData.PageUsername}</span>
-                  )}
-                  <button
-                    className="hover:underline"
-                    onClick={
-                      isEditing
-                        ? handleUpsertGamerInfo
-                        : () => setIsEditing(true)
-                    }
-                  >
-                    {isEditing ? "Save" : "Edit"}
-                  </button>
-                </div>
-                <Divider className="my-4" />
-
-                {/* GameNick */}
                 <div className="flex justify-between items-center">
                   <span className="font-semibold w-28">Game Nick</span>
                   {isEditing ? (
                     <input
                       type="text"
+                      maxLength={30}
                       value={editedData.GameNick}
                       onChange={(e) =>
                         setEditedData({
@@ -128,14 +89,13 @@ const ProfilePage = () => {
                     {isEditing ? "Save" : "Edit"}
                   </button>
                 </div>
-                <Divider className="my-4" />
 
-                {/* GameTag */}
                 <div className="flex justify-between items-center">
                   <span className="font-semibold w-28">Game Tag</span>
                   {isEditing ? (
                     <input
                       type="text"
+                      maxLength={30}
                       value={editedData.GameTag}
                       onChange={(e) =>
                         setEditedData({
@@ -159,14 +119,13 @@ const ProfilePage = () => {
                     {isEditing ? "Save" : "Edit"}
                   </button>
                 </div>
-                <Divider className="my-4" />
 
-                {/* Description */}
                 <div className="flex justify-between items-center">
                   <span className="font-semibold w-28">Description</span>
                   {isEditing ? (
                     <input
                       type="text"
+                      maxLength={30}
                       value={editedData.Description}
                       onChange={(e) =>
                         setEditedData({
@@ -190,12 +149,9 @@ const ProfilePage = () => {
                     {isEditing ? "Save" : "Edit"}
                   </button>
                 </div>
-                <Divider className="my-4" />
               </div>
             </div>
-          ) : (
-            <p>No gamer information found. Please fill in your details.</p>
-          )}
+          </div>
         </>
       ) : (
         <p>No user found</p>

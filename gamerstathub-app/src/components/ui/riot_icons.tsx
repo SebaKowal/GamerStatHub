@@ -12,7 +12,7 @@ export const useTierIcons = () => {
         "Bronze",
         "Silver",
         "Gold",
-        "Platinium",
+        "Platinum",
         "Emerald",
         "Diamond",
         "Master",
@@ -55,7 +55,6 @@ export const getTierIcon = (
   const tierIcon = tierIcons.find(
     (icon) => icon.tier.toLowerCase() === tier.toLowerCase()
   );
-
   if (tierIcon) {
     return tierIcon.url;
   } else if (tier.toLowerCase() === "unranked") {

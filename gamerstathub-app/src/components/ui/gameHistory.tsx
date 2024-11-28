@@ -15,13 +15,22 @@ import Items from "./items";
 import Runes from "./runes";
 import Image from "next/image";
 import { MatchData } from "../interfaces";
+import { Button } from "@nextui-org/button";
+
+const normalizeChampionName = (championName: string): string => {
+  const nameMapping: Record<string, string> = {
+    FiddleSticks: "Fiddlesticks",
+  };
+
+  return nameMapping[championName] || championName;
+};
 
 export default function GameHistory({ puuid }: { puuid: string }) {
   const [matchHistory, setMatchHistory] = useState<MatchData[]>([]);
   const [spellData, setSpellData] = useState<Record<string, SpellData>>({});
   const [runeData, setRuneData] = useState<Record<string, RuneData>>({});
   const [itemData, setItemData] = useState<Record<string, ItemData>>({});
-  const [count, setCount] = useState<number>(5); // Start with 5 matches
+  const [count, setCount] = useState<number>(5);
 
   useEffect(() => {
     const fetchMatchHistory = async () => {
@@ -35,14 +44,14 @@ export default function GameHistory({ puuid }: { puuid: string }) {
             .filter((p: any) => p.teamId === participant.teamId)
             .map((t: any) => ({
               summonerName: t.summonerName,
-              champion: t.championName,
+              champion: normalizeChampionName(t.championName),
             }));
 
           const opponents = match.info.participants
             .filter((p: any) => p.teamId !== participant.teamId)
             .map((o: any) => ({
               summonerName: o.summonerName,
-              champion: o.championName,
+              champion: normalizeChampionName(o.championName),
             }));
           const items = [
             participant.item0,
@@ -57,7 +66,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
           return {
             matchId: match.metadata.matchId,
             gameMode: match.info.gameMode,
-            champion: participant.championName,
+            champion: normalizeChampionName(participant.championName),
             kills: participant.kills,
             deaths: participant.deaths,
             assists: participant.assists,
@@ -118,7 +127,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
   }, [puuid, count]);
 
   const loadMoreMatches = () => {
-    setCount((prevCount) => prevCount + 5); // Load 5 more matches each time
+    setCount((prevCount) => prevCount + 5);
   };
 
   return (
@@ -132,10 +141,10 @@ export default function GameHistory({ puuid }: { puuid: string }) {
             }`}
           >
             <div className="flex md:flex-row flex-col text-center w-full ">
-              <div className="flex flex-row mb-4 md:mb-0 w-full  ">
+              <div className="flex flex-row mb-4 md:mb-0 w-full">
                 <div className="flex flex-col mr-4">
                   <p className="font-bold text-white mb-2">{match.gameMode}</p>
-                  <p className="text-white text-lg ">
+                  <p className="text-white text-lg">
                     {match.kills}/{match.deaths}/{match.assists}
                   </p>
                   <p className="text-gray-400 text-sm">
@@ -144,8 +153,8 @@ export default function GameHistory({ puuid }: { puuid: string }) {
                   <div className="text-gray-400 text-xs mt-2">
                     <p>{match.gameDate}</p>
                     <p>
-                      {Math.floor(match.gameDuration / 60)}{" "}
-                      {match.gameDuration % 60}
+                      {Math.floor(match.gameDuration / 60)}m{" "}
+                      {match.gameDuration % 60}s
                     </p>
                   </div>
                 </div>
@@ -153,7 +162,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
                   <div className="flex mb-2 mr-1">
                     <Image
                       className="w-14 h-14 rounded-full mr-2"
-                      src={`https://ddragon.leagueoflegends.com/cdn/12.18.1/img/champion/${match.champion}.png`}
+                      src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${match.champion}.png`}
                       alt={match.champion}
                       width={64}
                       height={64}
@@ -167,21 +176,19 @@ export default function GameHistory({ puuid }: { puuid: string }) {
                       />
                       <Runes runeIds={match.runes} runeData={runeData} />
                     </div>
-
-                    <div className="flex ">
+                    <div className="flex">
                       <Items itemIds={match.items} itemData={itemData} />
                     </div>
                   </div>
                 </div>
               </div>
-
               <div className="flex flex-row items-center ml-4 md:ml-16 text-xs">
                 <div className="flex flex-col">
                   {match.teammates.map((teammate, idx) => (
                     <div key={idx} className="flex items-center">
                       <Image
                         className="w-6 h-6 rounded-full"
-                        src={`https://ddragon.leagueoflegends.com/cdn/12.18.1/img/champion/${teammate.champion}.png`}
+                        src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${teammate.champion}.png`}
                         alt={teammate.champion}
                         width={32}
                         height={32}
@@ -192,19 +199,19 @@ export default function GameHistory({ puuid }: { puuid: string }) {
                     </div>
                   ))}
                 </div>
-
                 <div className="flex flex-col ml-4">
                   {match.opponents.map((opponent, idx) => (
                     <div key={idx} className="flex items-center">
                       <Image
                         className="w-6 h-6 rounded-full"
-                        src={`https://ddragon.leagueoflegends.com/cdn/12.18.1/img/champion/${opponent.champion}.png`}
+                        src={`https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/${opponent.champion}.png`}
                         alt={opponent.champion}
                         width={32}
                         height={32}
                       />
                       <p className="text-gray-400 ml-1 text-[10px] 2xl:text-sm whitespace-nowrap overflow-hidden text-ellipsis w-20 2xl:w-36">
                         {opponent.summonerName}
+                        
                       </p>
                     </div>
                   ))}
@@ -216,12 +223,11 @@ export default function GameHistory({ puuid }: { puuid: string }) {
       ) : (
         <p className="text-white">Brak wyników.</p>
       )}
-      <button 
-        onClick={loadMoreMatches}
-        className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Pokaż więcej gier
-      </button>
+      <div className="flex justify-center">
+        <Button color="default" variant="light" onClick={loadMoreMatches}>
+          Load more games
+        </Button>
+      </div>
     </div>
   );
 }
