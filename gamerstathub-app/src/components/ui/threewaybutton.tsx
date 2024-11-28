@@ -1,5 +1,3 @@
-// components/ui/ThreeWayButton.tsx
-
 import React from "react";
 
 interface ThreeWayButtonProps {
