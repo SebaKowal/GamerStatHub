@@ -25,32 +25,31 @@ const MainPage = () => {
   const [highlightedUsers, setHighlightedUsers] = useState<string[]>([]);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchFriends = async () => {
-    if (currentUser?.id === undefined) return;
-    try {
-      const response = await axios.get("/api/friends/list", {
-        params: { userId: currentUser.id },
-      });
-      setFriendIds(response.data.friends || []);
-    } catch (error) {
-      console.error("[Main Page] Error fetching friends list:", error);
-    }
-  };
-
+  // Pobieranie listy znajomych
   useEffect(() => {
-    fetchFriends();
-    pollingIntervalRef.current = setInterval(fetchFriends, 5000);
+    const fetchFriends = async () => {
+      if (!currentUser) return;
 
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
+      try {
+        const response = await axios.get("/api/friends/list", {
+          params: { userId: currentUser.id },
+        });
+        setFriendIds(response.data.friends || []);
+      } catch (error) {
+        console.error("Error fetching friends list:", error);
       }
     };
+
+    if (currentUser) {
+      fetchFriends();
+    }
   }, [currentUser]);
 
+  // Polling dla nieodczytanych wiadomości
   useEffect(() => {
     const fetchUnreadMessages = async () => {
-      if (currentUser?.id === undefined) return;
+      if (!currentUser) return;
+
       try {
         const response = await axios.get("/api/messages/unread", {
           params: { userId: currentUser.id },
@@ -59,10 +58,11 @@ const MainPage = () => {
         const unreadUserIds = unreadMessages.map((msg: any) => msg.Sender_ID);
         setHighlightedUsers(unreadUserIds);
       } catch (error) {
-        console.error("[Main Page] Error fetching unread messages:", error);
+        console.error("Error fetching unread messages:", error);
       }
     };
 
+    // Uruchomienie polling co 5 sekund
     fetchUnreadMessages();
     pollingIntervalRef.current = setInterval(fetchUnreadMessages, 5000);
 
@@ -73,6 +73,7 @@ const MainPage = () => {
     };
   }, [currentUser]);
 
+  // Pobieranie profili graczy
   useEffect(() => {
     const fetchSummonerProfiles = async () => {
       if (!users) return;
@@ -82,12 +83,13 @@ const MainPage = () => {
           return true;
         }
 
-        const isFriend = friendIds.includes(String(user.ID_userAuth));
         return (
           user.GamerInfo_ID !== currentGamerInfo?.GamerInfo_ID &&
           (filter === "all" ||
-            (filter === "friends" && isFriend) ||
-            (filter === "none" && !isFriend))
+            (filter === "friends" &&
+              friendIds.includes(String(user.ID_userAuth))) ||
+            (filter === "none" &&
+              !friendIds.includes(String(user.ID_userAuth))))
         );
       });
 

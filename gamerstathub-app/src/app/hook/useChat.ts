@@ -2,14 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Message } from "@/components/types";
 
-const useChat = (friendshipId: number, currentUserId: string | null) => {
+const useChat = (friendshipId: number, currentUserId: string) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const previousMessagesRef = useRef<Message[]>([]);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!currentUserId) return;
-
     const fetchMessages = async () => {
       try {
         const response = await axios.get(`/api/messages/${friendshipId}`);
@@ -39,7 +37,6 @@ const useChat = (friendshipId: number, currentUserId: string | null) => {
   }, [friendshipId, currentUserId]);
 
   const markMessageAsRead = async (messageId: number) => {
-    if (!currentUserId) return; 
     try {
       await axios.post("/api/messages/markAsRead", {
         messageId,
@@ -52,7 +49,7 @@ const useChat = (friendshipId: number, currentUserId: string | null) => {
   };
 
   const sendMessage = async (content: string) => {
-    if (!currentUserId || !content.trim()) return; 
+    if (!content.trim()) return;
 
     const temporaryMessage: Message = {
       Message_ID: Date.now(),
