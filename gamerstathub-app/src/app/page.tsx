@@ -25,11 +25,9 @@ const MainPage = () => {
   const [highlightedUsers, setHighlightedUsers] = useState<string[]>([]);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Pobieranie listy znajomych
   useEffect(() => {
+    if (currentUser?.id === undefined) return;
     const fetchFriends = async () => {
-      if (!currentUser) return;
-
       try {
         const response = await axios.get("/api/friends/list", {
           params: { userId: currentUser.id },
@@ -45,11 +43,9 @@ const MainPage = () => {
     }
   }, [currentUser]);
 
-  // Polling dla nieodczytanych wiadomości
   useEffect(() => {
+    if (currentUser?.id === undefined) return;
     const fetchUnreadMessages = async () => {
-      if (!currentUser) return;
-
       try {
         const response = await axios.get("/api/messages/unread", {
           params: { userId: currentUser.id },
@@ -62,7 +58,6 @@ const MainPage = () => {
       }
     };
 
-    // Uruchomienie polling co 5 sekund
     fetchUnreadMessages();
     pollingIntervalRef.current = setInterval(fetchUnreadMessages, 5000);
 
@@ -73,7 +68,6 @@ const MainPage = () => {
     };
   }, [currentUser]);
 
-  // Pobieranie profili graczy
   useEffect(() => {
     const fetchSummonerProfiles = async () => {
       if (!users) return;
