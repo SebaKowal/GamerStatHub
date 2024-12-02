@@ -19,12 +19,33 @@ const MainPage = () => {
   const { data: currentUser } = useUser();
   const { data: currentGamerInfo } = useGamerInfo(currentUser?.id);
   const { data: users, isLoading, error } = useAllGamerInfo();
-  const [summonerProfiles, setSummonerProfiles] = useState<User[]>([]);
+  const [allSummonerProfiles, setAllSummonerProfiles] = useState<User[]>([]);
+  const [filteredProfiles, setFilteredProfiles] = useState<User[]>([]);
   const [filter, setFilter] = useState<"all" | "friends" | "none">("all");
   const [friendIds, setFriendIds] = useState<string[]>([]);
   const [highlightedUsers, setHighlightedUsers] = useState<string[]>([]);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const retryFetch = async (
+    fetchFunction: () => Promise<any>,
+    retries: number = 5,
+    delay: number = 1000
+  ): Promise<any> => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        return await fetchFunction();
+      } catch (error) {
+        if (i < retries - 1) {
+          console.warn(`Retrying... (${i + 1}/${retries})`);
+          await new Promise((res) => setTimeout(res, delay * Math.pow(2, i)));
+        } else {
+          console.error("Fetch failed after retries:", error);
+          throw error;
+        }
+      }
+    }
+  };
 
+  // Fetch friend IDs
   useEffect(() => {
     if (currentUser?.id === undefined) return;
     const fetchFriends = async () => {
@@ -38,11 +59,10 @@ const MainPage = () => {
       }
     };
 
-    if (currentUser) {
-      fetchFriends();
-    }
+    fetchFriends();
   }, [currentUser]);
 
+  // Fetch unread messages for highlighting users
   useEffect(() => {
     if (currentUser?.id === undefined) return;
     const fetchUnreadMessages = async () => {
@@ -68,14 +88,39 @@ const MainPage = () => {
     };
   }, [currentUser]);
 
+  // Fetch all summoner profiles once
   useEffect(() => {
     const fetchSummonerProfiles = async () => {
       if (!users) return;
 
-      const filteredUsers = users.filter((user: User) => {
-        if (!currentUser) {
-          return true;
-        }
+      const profiles = await Promise.all(
+        users.map(async (user: User) => {
+          try {
+            const puuid = await retryFetch(() =>
+              fetchPUUIDByRiotID(user.GameNick, user.GameTag)
+            );
+            const summonerData = await retryFetch(() =>
+              fetchSummonerDataByPUUID(puuid)
+            );
+            return { ...user, summonerData };
+          } catch (error) {
+            console.error("Error fetching summoner data after retries:", error);
+            return { ...user, summonerData: null };
+          }
+        })
+      );
+
+      setAllSummonerProfiles(profiles);
+    };
+
+    fetchSummonerProfiles();
+  }, [users]);
+
+  // Apply filter on already fetched data
+  useEffect(() => {
+    const filterProfiles = () => {
+      const filtered = allSummonerProfiles.filter((user: User) => {
+        if (!currentUser) return true;
 
         return (
           user.GamerInfo_ID !== currentGamerInfo?.GamerInfo_ID &&
@@ -87,26 +132,11 @@ const MainPage = () => {
         );
       });
 
-      const profiles = await Promise.all(
-        filteredUsers.map(async (user: User) => {
-          try {
-            const puuid = await fetchPUUIDByRiotID(user.GameNick, user.GameTag);
-            const summonerData = await fetchSummonerDataByPUUID(puuid);
-            return {
-              ...user,
-              summonerData,
-            };
-          } catch (error) {
-            console.error("Error fetching summoner data:", error);
-            return { ...user, summonerData: null };
-          }
-        })
-      );
-      setSummonerProfiles(profiles);
+      setFilteredProfiles(filtered);
     };
 
-    fetchSummonerProfiles();
-  }, [users, currentGamerInfo, filter, friendIds, currentUser]);
+    filterProfiles();
+  }, [allSummonerProfiles, filter, friendIds, currentUser, currentGamerInfo]);
 
   const handleFilterChange = (newFilter: "all" | "friends" | "none") => {
     setFilter(newFilter);
@@ -130,7 +160,7 @@ const MainPage = () => {
           gridTemplateColumns: "repeat(auto-fit, 300px)",
         }}
       >
-        {summonerProfiles.map((user) => (
+        {filteredProfiles.map((user) => (
           <div
             key={user.GamerInfo_ID}
             className={`w-[300px] border border-gray-600 rounded-xl divide-y divide-gray-600 px-1 bg-gray-800 ${
