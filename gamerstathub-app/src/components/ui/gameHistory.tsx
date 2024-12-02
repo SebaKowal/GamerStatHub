@@ -221,7 +221,7 @@ export default function GameHistory({ puuid }: { puuid: string }) {
           </div>
         ))
       ) : (
-        <p className="text-white">Brak wyników.</p>
+        <p className="text-white"></p>
       )}
       <div className="flex justify-center">
         <Button color="default" variant="light" onClick={loadMoreMatches}>

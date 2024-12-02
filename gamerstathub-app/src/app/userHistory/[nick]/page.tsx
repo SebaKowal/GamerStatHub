@@ -8,6 +8,7 @@ import {
 import SummonerProfile from "@/components/ui/summonerProfile";
 import GameHistory from "@/components/ui/gameHistory";
 import { SummonerData } from "@/components/interfaces";
+import { Spinner } from "@nextui-org/spinner";
 
 export default function UserGameProfile() {
   const [gameNick, setGameNick] = useState<string>("");
@@ -47,14 +48,19 @@ export default function UserGameProfile() {
     fetchSummonerData();
   }, [gameNick, gameTag]);
 
-  if (isLoading) return <div>Loading your game profile...</div>;
+  if (isLoading)
+    return (
+      <div className="flex p-12 min-h-screen items-center justify-center min-h-screen">
+        <Spinner label="Loading..." color="default" />
+      </div>
+    );
   if (error) return <div>Error loading data: {error}</div>;
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-4 px-4 sm:px-16">
       {summonerData ? (
         <div className="flex flex-col w-full lg:flex-row pt-2 p-4 m-2 ">
-          <SummonerProfile 
+          <SummonerProfile
             summonerData={summonerData}
             gamerInfo={{ GameNick: gameNick, GameTag: gameTag }}
           />
@@ -64,7 +70,7 @@ export default function UserGameProfile() {
         </div>
       ) : (
         <div className="flex items-center justify-center min-h-screen">
-          <p className="text-white text-2xl">Loading ... </p>
+          <Spinner label="Loading..." color="default" />
         </div>
       )}
     </div>

@@ -14,6 +14,7 @@ import AddFriendButton from "@/components/friends/AddFriendButton";
 import axios from "axios";
 import { User } from "@/components/interfaces";
 import ThreeWayButton from "@/components/ui/threewaybutton";
+import { Spinner } from "@nextui-org/spinner";
 
 const MainPage = () => {
   const { data: currentUser } = useUser();
@@ -142,7 +143,12 @@ const MainPage = () => {
     setFilter(newFilter);
   };
 
-  if (isLoading) return <div className="p-12 min-h-screen">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="flex p-12 min-h-screen items-center justify-center min-h-screen">
+        <Spinner label="Loading..." color = "default" />
+      </div>
+    );
   if (error)
     return <div className="p-12 min-h-screen">Error: {error.message}</div>;
 
