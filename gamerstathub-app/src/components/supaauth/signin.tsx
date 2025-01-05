@@ -161,7 +161,7 @@ export function SignInForm({ redirectTo }: { redirectTo: string }) {
 			</form>
 			<div className="text-center text-sm">
 				<h1>
-					Doest not have account yet?{" "}
+					Does not have account yet?{" "}
 					<Link
 						href={
 							redirectTo
